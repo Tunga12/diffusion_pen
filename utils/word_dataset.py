@@ -106,7 +106,7 @@ class WordLineDataset(Dataset):
             data = self.main_loader(self.subset, self.segmentation_level)
             torch.save(data, save_file)   #Uncomment this in 'release' version
         else:
-            data = torch.load(save_file)
+            data = torch.load(save_file, weights_only=False)
         
         #data = self.main_loader(self.subset, self.segmentation_level)
         self.data = data
@@ -243,17 +243,33 @@ class WordLineDataset(Dataset):
         positive_samples = [p for p in self.data if p[2] == wid and len(p[1])>3]
         #negative_samples = [p for p in self.data if p[2] != wid and len(p[1])>3]
         # Make sure you have at least 5 matching images
+        # if len(positive_samples) >= 5:
+        #     # Randomly select 5 indices from the matching_indices
+        #     random_samples = random.sample(positive_samples, k=5)
+        #     # Retrieve the corresponding images
+        #     style_images = [i[0] for i in random_samples]
+        # else:
+        #     # Handle the case where there are fewer than 5 matching images (if needed)
+        #     #print("Not enough matching images with writer ID", wid)
+        #     positive_samples_ = [p for p in self.data if p[2] == wid]
+        #     random_samples_ = random.sample(positive_samples_, k=5)
+        #     # Retrieve the corresponding images
+        #     style_images = [i[0] for i in random_samples_]
+
         if len(positive_samples) >= 5:
             # Randomly select 5 indices from the matching_indices
             random_samples = random.sample(positive_samples, k=5)
             # Retrieve the corresponding images
             style_images = [i[0] for i in random_samples]
         else:
-            # Handle the case where there are fewer than 5 matching images (if needed)
-            #print("Not enough matching images with writer ID", wid)
+            # Handle the case where there are fewer than 5 matching images
             positive_samples_ = [p for p in self.data if p[2] == wid]
-            random_samples_ = random.sample(positive_samples_, k=5)
-            # Retrieve the corresponding images
+            # Use all available samples, repeating if necessary to get 5
+            if len(positive_samples_) >= 5:
+                random_samples_ = random.sample(positive_samples_, k=5)
+            else:
+                # Repeat samples to reach 5
+                random_samples_ = random.choices(positive_samples_, k=5)
             style_images = [i[0] for i in random_samples_]
         
         cor_images = random.sample(positive_samples, k=1)

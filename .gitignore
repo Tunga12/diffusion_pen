@@ -1,0 +1,44 @@
+# --- Byte-compiled / optimized / DLL files ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Environments & Dependencies ---
+.venv/
+venv/
+env/
+bin/
+lib/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.installed.cfg
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+
+# --- Large AI Models & Weights (Don't upload these!) ---
+*.ckpt
+*.safetensors
+*.pth
+*.pt
+*.bin
+*.onnx
+/models/
+/weights/
+
+# --- Outputs & Logs ---
+/outputs/
+/log/
+/logs/
+*.log
+
+# --- OS / IDE files ---
+.DS_Store
+.vscode/
+.idea/
+*.swp
+.env
